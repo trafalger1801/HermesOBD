@@ -28,7 +28,7 @@ public final class CSVLogger {
             let unit = units.convert(0, c.quantity).unit
             header.append("\(c.key) (\(unit))")
         }
-        let note = "# MustangOBD log. data_source=\(simulated ? "SIMULATED (not from a vehicle)" : "LIVE vehicle data") adapter=\(adapter ?? "unknown")"
+        let note = "# HermesOBD log. data_source=\(simulated ? "SIMULATED (not from a vehicle)" : "LIVE vehicle data") adapter=\(adapter ?? "unknown")"
         try write(line: Self.escape(note))
         try write(line: header.map(Self.escape).joined(separator: ","))
     }
@@ -64,7 +64,7 @@ public final class CSVLogger {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd_HHmmss"
         let base = dir ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("MustangOBD Logs", isDirectory: true)
+            .appendingPathComponent("HermesOBD Logs", isDirectory: true)
         return base.appendingPathComponent("obd_\(f.string(from: Date()))\(simulated ? "_SIMULATED" : "").csv")
     }
 }

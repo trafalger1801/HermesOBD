@@ -47,7 +47,7 @@ struct CSVTests {
         log.close()
         let lines = try String(contentsOf: url, encoding: .utf8).split(separator: "\n").map(String.init)
         #expect(lines.count == 3)
-        #expect(lines[0].hasPrefix("\"# MustangOBD log. data_source=SIMULATED"))
+        #expect(lines[0].hasPrefix("\"# HermesOBD log. data_source=SIMULATED"))
         #expect(lines[1] == "timestamp,elapsed_s,data_source,engine_rpm (rpm),coolant_temp (°F),vehicle_speed (mph)")
         #expect(lines[2].hasSuffix(",SIMULATED,1726,212,"))
         #expect(log.rowCount == 1)

@@ -78,7 +78,7 @@ public final class ELM327Emulator: @unchecked Sendable {
         case "S1": spaces = true; return ["OK"]
         case "H0", "H1", "AT0", "AT1", "AT2": return ["OK"]
         case "I": return ["ELM327 v1.5 (SIMULATOR)"]
-        case "@1": return ["MustangOBD built-in simulator"]
+        case "@1": return ["HermesOBD built-in simulator"]
         case "@2": return ["?"]
         case "RV": return [options.vehicleResponds ? "14.1V" : "12.5V"]
         case "DPN": return ["A\(options.protocolNumber)"]

@@ -15,7 +15,7 @@ struct OBDMonitorApp: App {
     @StateObject private var model = AppModel()
 
     var body: some Scene {
-        WindowGroup("Mustang OBD-II Monitor") {
+        WindowGroup("HermesOBD") {
             ContentView()
                 .environmentObject(model)
                 .onDisappear { model.disconnect() }

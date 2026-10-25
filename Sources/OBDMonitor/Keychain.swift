@@ -3,7 +3,7 @@ import Security
 
 /// Stores the Hermes API key in the login Keychain (not in UserDefaults or files).
 enum Keychain {
-    static let service = "local.mustangobd.monitor.hermes"
+    static let service = "local.hermesobd.monitor.hermes"
     static let account = "API_SERVER_KEY"
 
     static func read() -> String? {

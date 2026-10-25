@@ -156,7 +156,7 @@ public final class OBDEngine: @unchecked Sendable {
         // The built-in emulator can also be served over TCP/serial (obd-cli emulate). It identifies
         // itself, so its data is still labeled simulated even though the transport is real.
         if [info.identity, info.description].contains(where: { $0?.uppercased().contains("SIMULATOR") == true }) {
-            if !simulated { emit(.message("Adapter identifies itself as the MustangOBD simulator — data will be labeled SIMULATED.")) }
+            if !simulated { emit(.message("Adapter identifies itself as the HermesOBD simulator — data will be labeled SIMULATED.")) }
             simulated = true
         }
         emit(.adapterInfo(info))

@@ -5,7 +5,7 @@ import Foundation
 public enum ClearHistory {
     public static func defaultURL() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("MustangOBD Logs", isDirectory: true)
+            .appendingPathComponent("HermesOBD Logs", isDirectory: true)
             .appendingPathComponent("clear-history.log")
     }
 

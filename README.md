@@ -1,6 +1,6 @@
-# Mustang OBD-II Monitor (macOS)
+# HermesOBD (macOS)
 
-A live OBD-II dashboard for macOS, built for a 2005 Ford Mustang with a Bluetooth adapter sold for Innova's **RepairSolutions2** app. It shows live sensor data, reads trouble codes, logs to CSV, and has a clearly labeled simulator for testing without hardware.
+HermesOBD is a live OBD-II dashboard for macOS, built for a 2005 Ford Mustang with a Bluetooth adapter sold for Innova's **RepairSolutions2** app. It shows live sensor data, reads trouble codes, logs to CSV, and has a clearly labeled simulator for testing without hardware.
 
 The app only reads data, with one opt-in, guarded exception: [clearing trouble codes](#clearing-trouble-codes). It does not do tuning, actuator tests, or any other write.
 
@@ -32,9 +32,9 @@ The app only reads data, with one opt-in, guarded exception: [clearing trouble c
 Requirements: macOS 14 or newer and Apple's Command Line Tools (`xcode-select --install`). Full Xcode is not needed.
 
 ```bash
-cd ~/Downloads/MustangOBD
+cd ~/Downloads/HermesOBD
 ./scripts/build-app.sh
-open "dist/Mustang OBD Monitor.app"
+open "dist/HermesOBD.app"
 ```
 
 In the app, pick **Simulator** and click **Connect** to see the dashboard with fake data. Simulated data has an orange banner, orange labels, and `SIMULATED` in every CSV row.
@@ -131,9 +131,9 @@ Join the adapter's Wi-Fi network, then enter its IP address and port. `192.168.0
 | Permission | Why | Where to change |
 |---|---|---|
 | Bluetooth | Talk to a BLE adapter | System Settings › Privacy & Security › Bluetooth |
-| Documents folder | Save CSV logs to `~/Documents/MustangOBD Logs/` | Prompted on first log, if needed |
+| Documents folder | Save CSV logs to `~/Documents/HermesOBD Logs/` | Prompted on first log, if needed |
 | Network (Wi-Fi option only) | TCP connection to the adapter on your local network | No prompt, usually |
-| Keychain | Stores the Hermes API key, if you set one | Keychain Access, item `local.mustangobd.monitor.hermes` |
+| Keychain | Stores the Hermes API key, if you set one | Keychain Access, item `local.hermesobd.monitor.hermes` |
 
 The app doesn't use accounts or analytics. Vehicle data stays on your Mac unless you turn on [Hermes analysis](#hermes-agent-analysis), which sends summaries to your Hermes Agent and its configured model.
 
@@ -222,7 +222,7 @@ What the app does next:
   - rejected by the ECU (for example "conditions not correct", which usually means the engine is running)
   - unconfirmed
 - **Turns the switch back off.** Each clear needs a new opt-in, and the switch is also off at every launch.
-- **Appends a line to `~/Documents/MustangOBD Logs/clear-history.log`.** It records the time, LIVE or SIMULATED, the outcome, RPM and speed, and the codes before and after. The erased codes stay on record.
+- **Appends a line to `~/Documents/HermesOBD Logs/clear-history.log`.** It records the time, LIVE or SIMULATED, the outcome, RPM and speed, and the codes before and after. The erased codes stay on record.
 
 What clearing does to the car:
 - **Turns off the check-engine light and erases freeze-frame data.**
@@ -244,12 +244,12 @@ For tuning, use a dedicated handheld tuner made for 2005–2010 Mustangs, prefer
 
 ## CSV logging
 
-**Start Logging to CSV** becomes available once data is flowing. Files go to `~/Documents/MustangOBD Logs/obd_YYYY-MM-DD_HHMMSS.csv`, with `_SIMULATED` added for simulator sessions. **Show Last Log in Finder** reveals the file.
+**Start Logging to CSV** becomes available once data is flowing. Files go to `~/Documents/HermesOBD Logs/obd_YYYY-MM-DD_HHMMSS.csv`, with `_SIMULATED` added for simulator sessions. **Show Last Log in Finder** reveals the file.
 
 Format:
 
 ```
-# MustangOBD log. data_source=LIVE vehicle data adapter=ELM327 v1.5
+# HermesOBD log. data_source=LIVE vehicle data adapter=ELM327 v1.5
 timestamp,elapsed_s,data_source,engine_rpm (rpm),vehicle_speed (mph),coolant_temp (°F),...
 2026-10-22T13:35:12.932Z,0.029,LIVE,680,0,179,...
 ```
@@ -365,7 +365,7 @@ To use the real Hermes from the command line, run the second command with `--her
 ## Testing
 
 ```bash
-cd ~/Downloads/MustangOBD
+cd ~/Downloads/HermesOBD
 swift build --build-tests -j 1 && swift test --skip-build     # 57 tests
 ```
 
@@ -416,7 +416,7 @@ Then connect to `127.0.0.1:35000`.
 **UI self-check:** this runs the app against the simulator, saves PNGs of its own window (live data, trouble codes, adapter log, dropout, reconnect, disconnected), then quits. It also writes a `_SIMULATED` CSV to the logs folder.
 
 ```bash
-OBD_SELFCHECK_DIR=/tmp/obd-shots "dist/Mustang OBD Monitor.app/Contents/MacOS/OBDMonitor"
+OBD_SELFCHECK_DIR=/tmp/obd-shots "dist/HermesOBD.app/Contents/MacOS/OBDMonitor"
 ```
 
 Add `OBD_SELFCHECK_CLEAR=1` to run the clear-codes check instead. It captures the confirmation dialog, a refusal with the engine running, and a confirmed clear with the engine off, all on the simulator. It writes SIMULATED lines to `clear-history.log`.
@@ -459,5 +459,5 @@ Sources/OBDMonitor/       SwiftUI app, Bluetooth LE transport, self-check
 Sources/obd-cli/          headless monitor + simulator server
 Tests/OBDCoreTests/       Swift Testing suite
 Resources/Info.plist      app bundle metadata, including the Bluetooth usage text
-scripts/build-app.sh      builds dist/Mustang OBD Monitor.app
+scripts/build-app.sh      builds dist/HermesOBD.app
 ```

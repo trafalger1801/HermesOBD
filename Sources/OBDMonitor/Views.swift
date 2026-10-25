@@ -284,7 +284,7 @@ struct LoggingBar: View {
             } else {
                 Button("Start Logging to CSV") { model.startLogging() }
                     .disabled(!model.phase.isLive)
-                    .help("Writes one row per update to ~/Documents/MustangOBD Logs/. Rows are only written when data arrives.")
+                    .help("Writes one row per update to ~/Documents/HermesOBD Logs/. Rows are only written when data arrives.")
                 if model.lastLogURL != nil {
                     Button("Show Last Log in Finder") { model.revealLog() }
                 }
@@ -406,7 +406,7 @@ struct AboutView: View {
                 • Clearing trouble codes (service 04) is the only exception. It's off at every launch, and it needs codes read first, the car stopped with the engine off (re-checked right before sending), and CLEAR typed to confirm. Every attempt is recorded in clear-history.log.
                 • "LIVE" is shown only after the vehicle has answered. "Adapter replied" means the adapter answered, not the car.
                 • Simulated data is labeled in orange everywhere, including in CSV logs (data_source column and file name).
-                • Logs stay in ~/Documents/MustangOBD Logs/. Nothing is sent anywhere unless you turn on Hermes analysis, which sends data summaries to your Hermes agent and the model it's configured to use.
+                • Logs stay in ~/Documents/HermesOBD Logs/. Nothing is sent anywhere unless you turn on Hermes analysis, which sends data summaries to your Hermes agent and the model it's configured to use.
                 • Don't operate the app while driving. Have a passenger watch the screen, or log to CSV and review later.
                 """)
                 Text("Adapter compatibility").font(.headline)
@@ -562,7 +562,7 @@ struct ClearResultView: View {
                 if report.simulated { Text("SIMULATED").font(.caption.bold()).foregroundStyle(.orange) }
                 Text(title).font(.callout.weight(.semibold)).foregroundStyle(color)
             }
-            Text("Recorded in ~/Documents/MustangOBD Logs/clear-history.log").font(.caption).foregroundStyle(.secondary)
+            Text("Recorded in ~/Documents/HermesOBD Logs/clear-history.log").font(.caption).foregroundStyle(.secondary)
         }
     }
 }

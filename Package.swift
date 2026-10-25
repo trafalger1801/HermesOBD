@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "MustangOBD",
+    name: "HermesOBD",
     platforms: [.macOS(.v14)],
     products: [
         .executable(name: "OBDMonitor", targets: ["OBDMonitor"]),
