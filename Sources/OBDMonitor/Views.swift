@@ -192,7 +192,7 @@ struct ConnectionPanel: View {
                 .tag(d.id)
             }
             .frame(height: 180)
-            Text("Plug the adapter into the car, ignition ON, then scan. The Innova 3210RS appears as \"Dongle\" plus a number (e.g. Dongle446). Likely adapters are marked OBD? and listed first. Don't pair it in System Settings, and close RepairSolutions2 on your phone: the adapter accepts one connection at a time.")
+            Text("Plug the adapter into the car, ignition ON, then scan. The Innova 3210RS appears as \"Dongle\" plus a number. Likely adapters are marked OBD? and listed first. Don't pair it in System Settings, and close RepairSolutions2 on your phone: the adapter accepts one connection at a time.")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .onAppear { _ = ble.manager }   // creating the manager triggers the permission prompt

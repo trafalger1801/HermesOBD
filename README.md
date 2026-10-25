@@ -4,7 +4,7 @@ HermesOBD is a live OBD-II dashboard for macOS, built for a 2005 Ford Mustang wi
 
 The app only reads data, with one opt-in, guarded exception: [clearing trouble codes](#clearing-trouble-codes). It does not do tuning, actuator tests, or any other write.
 
-> **Status:** Live data and trouble-code reading were verified on the car on October 22, 2026, using the **Innova 3210RS** over Bluetooth LE (see [Your adapter: Innova 3210RS](#your-adapter-innova-3210rs)). Clearing codes and CSV logging from the car haven't been tried yet.
+> **Status:** Live data and trouble-code reading have been verified on a 2005 Mustang (CAN) with an **Innova 3210RS** adapter over Bluetooth LE (see [Tested adapter: Innova 3210RS](#tested-adapter-innova-3210rs)). Clearing codes and CSV logging on a real car haven't been tried yet. Other adapters and cars may behave differently.
 
 ---
 
@@ -43,17 +43,17 @@ Run the app as the `.app` bundle, not with `swift run`. macOS only grants Blueto
 
 ---
 
-## Your adapter: Innova 3210RS
+## Tested adapter: Innova 3210RS
 
-What we confirmed by connecting to it from this Mac (October 22, 2026):
+What a live test with a 2005 Mustang showed:
 
 | | |
 |---|---|
-| Bluetooth name | **`Dongle446`**. It doesn't say Innova or 3210RS. The app marks it **OBD?** and lists it first. |
+| Bluetooth name | **`Dongle`** followed by a number. It doesn't say Innova or 3210RS. The app marks it **OBD?** and lists it first. |
 | Link | Bluetooth LE, service `FFF0` (notify `FFF1`, write `FFF2`). No pairing in System Settings. |
 | Adapter | Reports itself as `ELM327 v1.3a`, "OBDII to RS232 Interpreter" |
 | Car protocol | Auto-detected: ISO 15765-4 CAN, 11-bit, 500 kbaud (`ATDPN` = `A6`) |
-| Supported PIDs | 47 advertised. Every value on the dashboard reads, including MAP and ambient temperature. |
+| Supported PIDs | The Mustang advertised 47. Every value on the dashboard read, including MAP and ambient temperature. |
 | Trouble codes | Stored (03) and pending (07) work. Permanent codes (0A) aren't supported by the car (`7F 0A 11`). |
 
 Adapter quirks the app now handles:
@@ -67,20 +67,18 @@ If the app can't find it:
 
 ## Adapter compatibility
 
-**Short answer: unknown until you have the model number.**
-
-What I found (October 2026):
+The app works with adapters that speak the standard **ELM327** command set over Bluetooth LE, Bluetooth Classic (serial), or Wi-Fi. Background on Innova's RepairSolutions2 adapters, from research in October 2026:
 
 - **RepairSolutions2** is Innova's phone app. Several Innova dongles pair with it, including the **Innova 1000** and the **3210RS / 3215RS** sold at Canadian Tire.
-- Innova's help center says the **Innova 1000** was designed to also accept the standard **ELM327** command set. It names third-party apps that worked: Car Scanner (in both Bluetooth Classic and BLE modes), OBD Auto Doctor (Classic), and EOBD-Facile (Classic). It also says some ELM327 commands may not work. ([Innova help article](https://rs2.helpscoutdocs.com/article/2319-will-the-innova-1000-work-with-general-obd2-elm327-compatible-apps). The link now redirects to a page that returned 404 when I checked, so I'm citing what search results quoted from it.)
+- Innova's help center says the **Innova 1000** was designed to also accept the standard **ELM327** command set. It names third-party apps that worked: Car Scanner (in both Bluetooth Classic and BLE modes), OBD Auto Doctor (Classic), and EOBD-Facile (Classic). It also says some ELM327 commands may not work. ([Innova help article](https://rs2.helpscoutdocs.com/article/2319-will-the-innova-1000-work-with-general-obd2-elm327-compatible-apps). The link now redirects to a page that returned 404 at the time of writing; this summarizes what search results quoted from it.)
 - A Canadian Tire listing describes the **3210RS** as containing ELM327 and Bluetooth, and says it pairs with most OBD2 apps. ([listing](https://www.canadiantire.ca/en/pdp/3210rs-bt-codereader-0251084p.0251084.html))
 - Innova's iPhone setup guide says to pair **inside the app, not in phone Bluetooth settings**, and on Android it needs Location Services "for Bluetooth BLE". That suggests at least the 1000 uses BLE with the phone. ([iPhone troubleshooting](https://innova-electronics.helpscoutdocs.com/article/2736-innova-1000-iphone-or-ipad-troubleshooting), [Android troubleshooting](https://innova-electronics.helpscoutdocs.com/article/2737-innova-1000-android-troubleshooting))
 - An Innova blog post says the RepairSolutions2 app is optional for most Innova scanners, but "dongle-based scanners are an exception". Some dongles may only work with Innova's app. ([Innova blog](https://www.innova.com/blogs/product-guides/is-the-repairsolutions2-app-required-to-use))
 - Innova's FAQ says the 1000 and RS2 app only work in the US and Canada. ([1000 support](https://www.innova.com/pages/1000-qr-support))
 
-I found **no Innova documentation about Mac use** and no published BLE service UUIDs. So this app doesn't assume any protocol. It speaks the standard ELM327 protocol over BLE, Bluetooth Classic serial, or Wi-Fi, and reports what happens. If your adapter uses a proprietary RepairSolutions2-only protocol, this app won't work with it. That's expected, not a bug, and this project won't reverse-engineer it.
+There's **no Innova documentation about Mac use** and no published BLE service UUIDs, so the app doesn't assume a protocol: it speaks standard ELM327 and reports what happens. If an adapter only speaks a proprietary RepairSolutions2 protocol, this app won't work with it. That's expected, not a bug, and this project won't reverse-engineer it.
 
-**What this Mac supports:** this Mac's Bluetooth controller reports both BLE (GATT) and Classic serial port profile support (`system_profiler SPBluetoothDataType`).
+To check your Mac's Bluetooth support, run `system_profiler SPBluetoothDataType`. Most Macs support both BLE (GATT) and the Classic serial port profile.
 
 ---
 
@@ -276,7 +274,7 @@ The app can send your data to your local **Hermes Agent** (`~/.hermes/hermes-age
 - Reading trouble codes triggers an immediate analysis.
 - Each analysis has a **What was sent** section showing the exact text.
 
-**Privacy:** requests don't set a model or provider, so **Hermes uses its own configured model**. On this Mac that's currently a cloud model (`openai-codex`), which means these summaries leave your Mac and go to that provider through Hermes. The VIN, location and personal details are not included. The feature is **off every time the app starts** and only runs while the switch is on.
+**Privacy:** requests don't set a model or provider, so **Hermes uses its own configured model**. If that's a cloud model, these summaries leave your Mac and go to that provider through Hermes. The VIN, location and personal details are not included. The feature is **off every time the app starts** and only runs while the switch is on.
 
 **Tools:** Hermes's API server gives the agent its normal toolset, terminal included. The app's instructions tell Hermes to reply with text only and not run tools for these messages. That's a request to the model, not something the app can enforce. To enforce it, limit the tools Hermes allows for its `api_server` platform in Hermes's own config (see `platform_toolsets` in Hermes's configuration docs).
 
@@ -302,10 +300,8 @@ The app can send your data to your local **Hermes Agent** (`~/.hermes/hermes-age
 4. Connect to the car (or the simulator), choose an interval, and turn on **Send data to Hermes for live analysis**.
 
 Notes:
-- **On this Mac this is already done:**
-  - The API server is enabled in `~/.hermes/.env`. The original file is backed up as `~/.hermes/.env.bak-20261022-094832`.
-  - The key is saved in the Keychain.
-  - You only need to run `hermes gateway run` before using the feature.
+- **Back up `~/.hermes/.env`** before editing it.
+- The gateway must be running (`hermes gateway run`) whenever you use the feature.
 - **Rebuilding the app:** the app is ad-hoc signed, so after `./scripts/build-app.sh` macOS may ask whether it can read the Keychain item. Click **Always Allow**, or paste the key again.
 - **"Install it now? [Y/n]" at gateway startup:** this asks about Hermes's optional `fal` image-generation package. The gateway and API server work without it. Type `n` if you don't want it; pressing Enter means yes.
 - Hermes replies are AI commentary and can be wrong.
@@ -332,7 +328,7 @@ To use the real Hermes from the command line, run the second command with `--her
 
 ## Limitations
 
-- **Hermes analysis has been tested with simulated data only** (October 22, 2026, against your Hermes 0.22.2 using `openai-codex` / `gpt-6-luna`). It hasn't been tested with data from the car.
+- **Hermes analysis has been tested with simulated data only** (Hermes Agent 0.22.2 with a cloud model). It hasn't been tested with data from a car.
 - Tested with one adapter (Innova 3210RS) on one car. Other adapters may behave differently. See [Hardware checks still to do](#hardware-checks-still-to-do).
 - BLE characteristic selection is a heuristic, and some adapters may need a specific pair.
 - With adapter headers turned off (`ATH0`), replies from multiple control modules can't be told apart. For live data the app uses the first matching reply. For trouble codes it merges codes from all modules.
@@ -423,12 +419,12 @@ Add `OBD_SELFCHECK_CLEAR=1` to run the clear-codes check instead. It captures th
 
 ### Hardware checks still to do
 
-- [x] Identify the adapter model (Innova 3210RS, BLE name `Dongle446`)
+- [x] Identify the adapter model (Innova 3210RS, BLE name `Dongle` + number)
 - [x] BLE scan finds the adapter, and the Adapter Log lists its services
 - [x] Adapter answers `ATZ`/`ATI` (ELM327 v1.3a)
 - [x] With the engine running, the car answers `0100` and the status turns green LIVE
 - [x] Protocol shown in the status bar (ISO 15765-4 CAN 11-bit/500k)
-- [x] Values look plausible: idle about 640 rpm, coolant 180 °F, long-term trims +7.0% / +4.7%
+- [x] Values look plausible (idle RPM, coolant temperature, fuel trims)
 - [x] Read trouble codes: none stored or pending, MIL off
 - [ ] Unplug the adapter, or turn the ignition off, while connected → reconnecting, then recovery
 - [ ] CSV log from a short drive (with a passenger watching the screen)
@@ -461,3 +457,11 @@ Tests/OBDCoreTests/       Swift Testing suite
 Resources/Info.plist      app bundle metadata, including the Bluetooth usage text
 scripts/build-app.sh      builds dist/HermesOBD.app
 ```
+
+---
+
+## License
+
+[MIT](LICENSE). You're free to use, modify, and share this code, including commercially, as long as the copyright notice is kept.
+
+This software talks to your car's computer. It comes with no warranty; use it at your own risk, and never use it in a way that distracts you while driving.
