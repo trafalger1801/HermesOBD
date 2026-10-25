@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key><string>Mustang OBD Monitor</string>
+    <key>CFBundleDisplayName</key><string>Mustang OBD Monitor</string>
+    <key>CFBundleIdentifier</key><string>local.mustangobd.monitor</string>
+    <key>CFBundleExecutable</key><string>OBDMonitor</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>0.1.0</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSMinimumSystemVersion</key><string>14.0</string>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Bluetooth is used only to talk to your OBD-II adapter and read data from your car. Nothing is sent to the internet.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>CSV logs are saved to Documents/MustangOBD Logs.</string>
+</dict>
+</plist>
